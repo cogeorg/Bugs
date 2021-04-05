@@ -14,25 +14,30 @@ import os
 # do_run(file_name)
 # -------------------------------------------------------------------------
 def do_run(base_directory, input_file_name, output_file_name):
-    input_file = open(base_directory + input_file_name, "r")
 
-    out_text = ""
+    out_text = "Project ID;Project Name;Version Number;Dependency Requirements;Dependency Project ID\n"
+    out_file = open(base_directory + output_file_name, 'w')
+    out_file.write(out_text)
+    out_file.close() # ensure file is empty
+    out_file = open(base_directory + output_file_name, 'a')
 
-    print("<<<<<< WORKING ON: " + input_file_name)
-    # if True:
-    #     print("    << INCLUDE DIR: " + base_directory + "include/ " + (colored.green("...TRUE") if os.path.isdir(base_directory + "include/") else colored.red("...FALSE")))
+    print("<<<<<< WORKING ON: " + base_directory + input_file_name)
+    _count = 0
+    _found = 0
 
-    # read input file
-    for line in input_file.readlines():
-        tokens = line.strip().split(",")
-        print(tokens)
+    with open(base_directory + input_file_name) as infile:
+        for line in infile:
+            _count += 1
+            tokens = line.strip().split(",")
+            if tokens[1] == "NPM" or tokens[1] == "npm":
+                out_file.write(tokens[3] + ";" + tokens[2] + ";" + tokens[4] + ";" + tokens[10] + ";" + tokens[11] + "\n")
+                _found += 1
 
     # add output
     out_text += "\n"
-
-    out_file = open(base_directory + output_file_name, 'w')
     out_file.write(out_text)
     out_file.close()
+    print("    >>> FOUND: " + str(_found) + " OF TOTAL: " + str(_count) + " ENTRIES")
     print("    >>> FILE WRITTEN TO:" + base_directory + output_file_name)
     print(">>>>>> FINISHED")
 # -------------------------------------------------------------------------
